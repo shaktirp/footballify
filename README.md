@@ -1,6 +1,4 @@
-# y
-
-> y
+# Footballify
 
 ## Build Setup
 
