@@ -1,5 +1,6 @@
 <template>
-  <div class="hello">
+  <div>
+    <app-header></app-header>
     <h1>{{ msg }}</h1>
     <div class="main-container">
       <div class="results-container">
@@ -29,6 +30,8 @@
 </template>
 
 <script>
+import AppHeader from '../components/AppHeader'
+
 let auth = {
   headers: {
     'X-Auth-Token': '15008df9a7a5420595624fe4d305c149'
@@ -36,13 +39,16 @@ let auth = {
 }
 
 export default {
-  name: 'HelloWorld',
   data () {
     return {
       msg: 'Premier League',
       results: {},
       fixtures: {}
     }
+  },
+
+  components: {
+    'app-header': AppHeader
   },
 
   methods: {
