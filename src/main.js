@@ -9,6 +9,8 @@ import store from './lib/store'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 
+store.commit('initializeFirebaseApp')
+
 let originalVueComponent = Vue.component
 Vue.component = function (name, definition) {
   if (name === 'bFormCheckboxGroup' || name === 'bCheckboxGroup' ||

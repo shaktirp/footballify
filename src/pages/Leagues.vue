@@ -1,27 +1,29 @@
 <template>
   <div>
     <app-header></app-header>
-    <h1>{{ msg }}</h1>
-    <div class="main-container">
-      <div class="results-container">
-        <h2>Results</h2>
-        <div v-for="(value, key) in results">
-          <h3>{{ key }}</h3>
-          <div v-for="result in value" class="gameweek">
-            <span class="home">{{ result['homeTeamName'] }}</span>
-            <span class="score">{{ result['result']['goalsHomeTeam'] }} - {{ result['result']['goalsAwayTeam'] }}</span>
-            <span class="away">{{ result['awayTeamName'] }}</span>
+    <div class="page-container">
+      <h1>{{ msg }}</h1>
+      <div class="main-container">
+        <div class="results-container">
+          <h2>Results</h2>
+          <div v-for="(value, key) in results">
+            <h3>{{ key }}</h3>
+            <div v-for="result in value" class="gameweek">
+              <span class="home">{{ result['homeTeamName'] }}</span>
+              <span class="score">{{ result['result']['goalsHomeTeam'] }} - {{ result['result']['goalsAwayTeam'] }}</span>
+              <span class="away">{{ result['awayTeamName'] }}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="fixtures-container">
-        <h2>Fixtures</h2>
-        <div v-for="(value, key) in fixtures">
-          <h3>{{ key }}</h3>
-          <div v-for="fixture in value" class="gameweek">
-            <span class="home">{{ fixture['homeTeamName'] }}</span>
-            <span class="score"> vs </span>
-            <span class="away">{{ fixture['awayTeamName'] }}</span>
+        <div class="fixtures-container">
+          <h2>Fixtures</h2>
+          <div v-for="(value, key) in fixtures">
+            <h3>{{ key }}</h3>
+            <div v-for="fixture in value" class="gameweek">
+              <span class="home">{{ fixture['homeTeamName'] }}</span>
+              <span class="score"> vs </span>
+              <span class="away">{{ fixture['awayTeamName'] }}</span>
+            </div>
           </div>
         </div>
       </div>

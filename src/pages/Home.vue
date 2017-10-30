@@ -1,12 +1,15 @@
 <template>
   <div>
     <app-header></app-header>
-    <h3>{{ msg }}</h3>
+    <div class="page-container">
+      <h3 v-if="user.displayName">Hi {{ user.displayName }}</h3>
+    </div>
   </div>
 </template>
 
 <script>
 import AppHeader from '../components/AppHeader'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
@@ -19,6 +22,12 @@ export default {
 
   components: {
     'app-header': AppHeader
+  },
+
+  computed: {
+    ...mapState([
+      'user'
+    ])
   }
 }
 </script>

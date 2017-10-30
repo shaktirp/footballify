@@ -24,4 +24,9 @@ h1, h2, h3 {
 .btn-primary {
   background: #25A7AD
 }
+
+.page-container {
+  width: 1000px;
+  margin: 40px auto 0 auto
+}
 </style>

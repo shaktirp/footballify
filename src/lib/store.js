@@ -30,8 +30,17 @@ const mutations = {
     firebase.initializeApp(config)
   },
 
-  createUser () {
-    firebase.auth().createUserWithEmailAndPassword('test123@test123.co', 'password').catch(error => {
+  createUser (state, { name, email, password }) {
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
+      state.uid = user['uid']
+      state.user = user
+
+      user.updateProfile({
+        displayName: name
+      }).catch(error => {
+        console.error(error)
+      })
+    }).catch(error => {
       console.error('Error in creating user', error)
     })
   },
@@ -44,11 +53,22 @@ const mutations = {
     })
   },
 
-  authStateObserver (state, val) {
+  signOutUser () {
+    firebase.auth().signOut().then(data => {
+      console.log('Signed out')
+      state.uid = ''
+      state.user = {}
+    }).catch(error => {
+      console.error(error)
+    })
+  },
+
+  authStateObserver () {
     firebase.auth().onAuthStateChanged(user => {
+      console.log('Signed in?', user)
       if (user) {
-        state.user = user
         state.uid = user['uid']
+        state.user = user
       } else {
         console.log('User signed out')
       }
@@ -60,7 +80,9 @@ const mutations = {
 // asynchronous operations.
 const actions = {
   authStateObserver: ({ commit }) => commit('authStateObserver'),
-  signInUser: ({ commit }, { email, password }) => commit('signInUser', { email, password })
+  createUser: ({ commit }, { name, email, password }) => commit('createUser', { name, email, password }),
+  signInUser: ({ commit }, { email, password }) => commit('signInUser', { email, password }),
+  signOutUser: ({ commit }) => commit('signOutUser')
 }
 
 // getters are functions

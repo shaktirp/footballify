@@ -1,11 +1,11 @@
 <template>
   <header>
     <div class="logo">
-      <a href="/#/">FOOTBALLIFY {{ uid }}</a>
+      <a href="/#/">FOOTBALLIFY</a>
     </div>
 
     <div class="sign-in-form">
-      <b-modal ref="signInFormRef" id="signInForm" hide-footer=true hide-header=true>
+      <b-modal ref="signInFormRef" id="signInForm" :hide-footer="true" :hide-header="true">
         <b-form>
           <b-form-group id="emailGroup">
             <b-form-input type="email"
@@ -28,17 +28,52 @@
       </b-modal>
     </div>
 
+    <div class="sign-in-form">
+      <b-modal ref="signUpFormRef" id="signUpForm" :hide-footer="true" :hide-header="true">
+        <b-form>
+          <b-form-group id="nameGroup">
+            <b-form-input type="text"
+                          placeholder="Enter name"
+                          v-model="modal.form.name"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="emailGroup">
+            <b-form-input type="email"
+                          placeholder="Enter email"
+                          v-model="modal.form.email"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="passwordGroup">
+            <b-form-input type="password"
+                          placeholder="Password"
+                          v-model="modal.form.password"
+            ></b-form-input>
+          </b-form-group>
+          <b-button type="submit"
+                    variant="primary"
+                    @click="signupBtnClick"
+                    :disabled="modal.form.name ? false : true">
+            Sign up
+          </b-button>
+        </b-form>
+      </b-modal>
+    </div>
+
     <div class="nav">
-      <b-nav>
+      <b-nav class="header-menu">
         <b-nav-item href="/#/leagues">Leagues</b-nav-item>
-        <b-btn v-b-modal.signInForm>Login</b-btn>
+        <b-nav-item v-if="uid" @click="signOutUser">Sign out</b-nav-item>
+        <div v-else>
+          <b-btn v-b-modal.signInForm>Login</b-btn>
+          <b-btn v-b-modal.signUpForm>Sign up</b-btn>
+        </div>
       </b-nav>
     </div>
   </header>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -47,6 +82,7 @@ export default {
       modal: {
         hideHeader: true,
         form: {
+          name: '',
           email: 'test123@test123.co',
           password: 'password'
         }
@@ -57,11 +93,9 @@ export default {
   methods: {
     ...mapActions([
       'authStateObserver',
-      'signInUser'
-    ]),
-
-    ...mapMutations([
-      'initializeFirebaseApp'
+      'createUser',
+      'signInUser',
+      'signOutUser'
     ]),
 
     signInBtnClick () {
@@ -70,6 +104,15 @@ export default {
         password: this.modal.form.password
       })
       this.$refs.signInFormRef.hide()
+    },
+
+    signupBtnClick () {
+      this.createUser({
+        name: this.modal.form.name,
+        email: this.modal.form.email,
+        password: this.modal.form.password
+      })
+      this.$refs.signUpFormRef.hide()
     }
   },
 
@@ -80,7 +123,6 @@ export default {
   },
 
   mounted: function () {
-    this.initializeFirebaseApp()
     this.authStateObserver()
   }
 }
@@ -110,5 +152,13 @@ header a:hover {
 
 .sign-in-form {
   color: #000
+}
+
+.header-menu button {
+  margin-right: 20px
+}
+
+.header-menu button:last-child {
+  margin-right: 0
 }
 </style>
