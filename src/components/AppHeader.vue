@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="logo">
-      <a href="/#/">FOOTBALLIFY</a>
+      <a href="/#/">FOOTBALLIFY {{ uid }}</a>
     </div>
 
     <div class="sign-in-form">
@@ -21,7 +21,7 @@
           </b-form-group>
           <b-button type="submit"
                     variant="primary"
-                    @click="signInUser">
+                    @click="signInBtnClick">
             Sign In
           </b-button>
         </b-form>
@@ -38,17 +38,7 @@
 </template>
 
 <script>
-import * as firebase from 'firebase'
-import { mapGetters, mapActions } from 'vuex'
-
-let config = {
-  apiKey: 'AIzaSyBNBlLKG9XmRWLB4NeP-gVJuVixD9MC7KY',
-  authDomain: 'test-89c67.firebaseapp.com',
-  databaseURL: 'https://test-89c67.firebaseio.com',
-  projectId: 'test-89c67',
-  storageBucket: 'test-89c67.appspot.com',
-  messagingSenderId: '900979973520'
-}
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   data () {
@@ -66,50 +56,32 @@ export default {
 
   methods: {
     ...mapActions([
-      'getAuthState'
+      'authStateObserver',
+      'signInUser'
     ]),
 
-    initializeFirebaseApp: function () {
-      firebase.initializeApp(config)
+    ...mapMutations([
+      'initializeFirebaseApp'
+    ]),
 
-      this.getAuthState()
-    },
-
-    createUser: function () {
-      firebase.auth().createUserWithEmailAndPassword('test123@test123.co', 'password').catch(function (error) {
-        console.error('Error in creating user', error)
+    signInBtnClick () {
+      this.signInUser({
+        email: this.modal.form.email,
+        password: this.modal.form.password
       })
-    },
-
-    signInUser: function () {
-      console.log('signing in', this.modal.form)
-      firebase.auth().signInWithEmailAndPassword(this.modal.form.email, this.modal.form.password).then(data => {
-        this.authStateObserver()
-      }).catch(error => {
-        console.error(error)
-      })
-    },
-
-    authStateObserver () {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          console.log(user)
-          this.$refs.signInFormRef.hide()
-        } else {
-          console.log('User signed out')
-        }
-      })
+      this.$refs.signInFormRef.hide()
     }
   },
 
   computed: {
-    ...mapGetters([
-      'userID'
+    ...mapState([
+      'uid'
     ])
   },
 
   mounted: function () {
     this.initializeFirebaseApp()
+    this.authStateObserver()
   }
 }
 </script>
